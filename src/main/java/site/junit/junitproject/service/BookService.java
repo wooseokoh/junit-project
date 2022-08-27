@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,21 @@ public class BookService {
         return bookRepository.findAll().stream()
                 .map(new BookRespDto()::toDto)
                 .collect(Collectors.toList());
+    }
+
+    // 3. 책한건보기
+    public BookRespDto 책한건보기(Long id) {
+        Optional<Book> bookOP = bookRepository.findById(id);
+        if (bookOP.isPresent()) { // 찾았다면
+            return new BookRespDto().toDto(bookOP.get());
+        } else {
+            throw new RuntimeException("해당 아이디를 찾을 수 없습니다.");
+        }
+    }
+
+    // 4. 책삭제하기
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void 책삭제하기(Long id) { // 4
+        bookRepository.deleteById(id); // 1,2,3
     }
 }
