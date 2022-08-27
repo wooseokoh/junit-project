@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import site.junit.junitproject.domain.Book;
 import site.junit.junitproject.domain.BookRepository;
+import site.junit.junitproject.util.MailSender;
 import site.junit.junitproject.web.dto.BookRespDto;
 import site.junit.junitproject.web.dto.BookSaveReqDto;
 
@@ -19,11 +20,19 @@ import site.junit.junitproject.web.dto.BookSaveReqDto;
 public class BookService {
 
     private final BookRepository bookRepository;
+    private final MailSender mailSender;
 
     // 1. 책등록
     @Transactional(rollbackFor = RuntimeException.class)
     public BookRespDto 책등록하기(BookSaveReqDto dto) {
         Book bookPS = bookRepository.save(dto.toEntity());
+        if (bookPS != null) {
+            // 메일보내기 메서드 호출 (return true or false)
+
+            if (!mailSender.send()) {
+                throw new RuntimeException("메일이 전송되지 않았습니다");
+            }
+        }
         return new BookRespDto().toDto(bookPS);
     }
 
