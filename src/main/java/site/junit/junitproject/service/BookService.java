@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import site.junit.junitproject.domain.Book;
 import site.junit.junitproject.domain.BookRepository;
 import site.junit.junitproject.util.MailSender;
-import site.junit.junitproject.web.dto.BookRespDto;
-import site.junit.junitproject.web.dto.BookSaveReqDto;
+import site.junit.junitproject.web.dto.request.BookSaveReqDto;
+import site.junit.junitproject.web.dto.response.BookRespDto;
 
 @RequiredArgsConstructor
 @Service

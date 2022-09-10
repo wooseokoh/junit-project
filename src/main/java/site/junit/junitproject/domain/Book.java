@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.junit.junitproject.web.dto.BookRespDto;
+import site.junit.junitproject.web.dto.response.BookRespDto;
 
 @NoArgsConstructor
 @Getter
