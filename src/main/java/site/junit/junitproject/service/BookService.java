@@ -13,6 +13,7 @@ import site.junit.junitproject.domain.Book;
 import site.junit.junitproject.domain.BookRepository;
 import site.junit.junitproject.util.MailSender;
 import site.junit.junitproject.web.dto.request.BookSaveReqDto;
+import site.junit.junitproject.web.dto.response.BookListRespDto;
 import site.junit.junitproject.web.dto.response.BookRespDto;
 
 @RequiredArgsConstructor
@@ -35,12 +36,21 @@ public class BookService {
     }
 
     // 2. 책목록보기
-    public List<BookRespDto> 책목록보기() {
+    public BookListRespDto 책목록보기() {
 
-        return bookRepository.findAll().stream()
-                // .map((bookPS) -> new BookRespDto().toDto(bookPS))
+        List<BookRespDto> dtos = bookRepository.findAll().stream()
+                // .map((bookPS) -> bookPS.toDto())
                 .map(Book::toDto)
                 .collect(Collectors.toList());
+
+        dtos.stream().forEach((b) -> {
+            System.out.println(b.getId());
+            System.out.println(b.getTitle());
+            System.out.println("============ 서비스 레이어");
+        });
+
+        BookListRespDto bookListRespDto = BookListRespDto.builder().bookList(dtos).build();
+        return bookListRespDto;
     }
 
     // 3. 책한건보기
