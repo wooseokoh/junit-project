@@ -27,9 +27,6 @@ import site.junit.junitproject.web.dto.request.BookSaveReqDto;
 public class BookApiControllerTest {
 
     @Autowired
-    private BookService bookservice;
-
-    @Autowired
     private TestRestTemplate rt;
 
     private static ObjectMapper om;
