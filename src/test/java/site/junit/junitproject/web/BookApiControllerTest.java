@@ -122,6 +122,23 @@ public class BookApiControllerTest {
         assertThat(title).isEqualTo("junit");
     }
 
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void deleteBook_test() {
+        // given
+        Integer id = 1;
+        // when
+        HttpEntity<String> request = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = rt.exchange("/api/v1/book/" + id, HttpMethod.DELETE, request, String.class);
+        System.out.println("deleteBook_test()" + response.getBody());
+        // then
+        DocumentContext dc = JsonPath.parse(response.getBody());
+        Integer code = dc.read("$.code");
+        assertThat(code).isEqualTo(1);
+
+    }
+
     // @Test
     // public void di_test() {
     // if (bookservice == null) {
