@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,9 +23,9 @@ import com.jayway.jsonpath.JsonPath;
 
 import site.junit.junitproject.domain.Book;
 import site.junit.junitproject.domain.BookRepository;
-import site.junit.junitproject.service.BookService;
 import site.junit.junitproject.web.dto.request.BookSaveReqDto;
 
+@ActiveProfiles("dev")
 // 통합테스트 (C, S, R)
 // 컨트롤러만 테스트하는 것이 아님
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -136,6 +137,27 @@ public class BookApiControllerTest {
         DocumentContext dc = JsonPath.parse(response.getBody());
         Integer code = dc.read("$.code");
         assertThat(code).isEqualTo(1);
+
+    }
+
+    @Sql("classpath:db/tableInit.sql")
+    @Test
+    public void updateBook_test() throws Exception {
+        // given
+        Integer id = 1;
+        BookSaveReqDto bookSaveReqDto = new BookSaveReqDto();
+        bookSaveReqDto.setTitle("spring");
+        bookSaveReqDto.setAuthor("홍길동");
+        String body = om.writeValueAsString(bookSaveReqDto);
+        // when
+        HttpEntity<String> request = new HttpEntity<>(body, headers);
+
+        ResponseEntity<String> response = rt.exchange("/api/v1/book/" + id, HttpMethod.PUT, request, String.class);
+        System.out.println("updateBook_test()" + response.getStatusCodeValue());
+        // then
+        DocumentContext dc = JsonPath.parse(response.getBody());
+        String title = dc.read("$.body.title");
+        assertThat(title).isEqualTo("spring");
 
     }
 
